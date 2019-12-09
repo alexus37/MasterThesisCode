@@ -1,1 +1,1 @@
-from .methods import DeepExplain
+from .main import DeepExplain

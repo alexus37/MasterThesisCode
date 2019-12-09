@@ -1,6 +1,13 @@
 import numpy as np
 import tensorflow as tf
+import warnings
+from . import constants
+from tensorflow.python.ops import nn_grad, math_grad
 
+
+# -----------------------------------------------------------------------------
+# UTILITY FUNCTIONS
+# -----------------------------------------------------------------------------
 # Some of the following functions for batch processing have been borrowed and adapter from Keras
 # https://github.com/keras-team/keras/blob/master/keras/utils/generic_utils.py
 # https://github.com/keras-team/keras/blob/master/keras/engine/training_utils.py
@@ -67,3 +74,30 @@ def placeholder_from_data(numpy_array):
     if numpy_array is None:
         return None
     return tf.placeholder('float', [None,] + list(numpy_array.shape[1:]))
+
+def original_grad(op, grad):
+    """
+    Return original Tensorflow gradient for an op
+    :param op: op
+    :param grad: Tensor
+    :return: Tensor
+    """
+    if op.type not in constants.SUPPORTED_ACTIVATIONS:
+        warnings.warn('Activation function (%s) not supported' % op.type)
+    opname = '_%sGrad' % op.type
+    if hasattr(nn_grad, opname):
+        f = getattr(nn_grad, opname)
+    else:
+        f = getattr(math_grad, opname)
+    return f(op, grad)
+
+def activation(type):
+    """
+    Returns Tensorflow's activation op, given its type
+    :param type: string
+    :return: op
+    """
+    if type not in constants.SUPPORTED_ACTIVATIONS:
+        warnings.warn('Activation function (%s) not supported' % type)
+    f = getattr(tf.nn, type.lower())
+    return f

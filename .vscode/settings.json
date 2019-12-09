@@ -1,0 +1,5 @@
+{
+    "python.pythonPath": "/home/ax/miniconda3/envs/masterThesis/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true
+}

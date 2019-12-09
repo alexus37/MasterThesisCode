@@ -73,7 +73,7 @@ class AttributionMethod(object):
         self.Y_shape = [None,] + T.get_shape().as_list()[1:]
         # Most often T contains multiple output units. In this case, it is often necessary to select
         # a single unit to compute contributions for. This can be achieved passing 'ys' as weight for the output Tensor.
-        self.Y = tf.placeholder(tf.float32, self.Y_shape)
+        self.Y = tf.compat.v1.placeholder(tf.float32, self.Y_shape)
         # placeholder_from_data(ys) if ys is not None else 1.0  # Tensor that represents weights for T
         self.T = self.T * self.Y
         self.symbolic_attribution = None
@@ -107,17 +107,17 @@ class AttributionMethod(object):
         if batch_size is not None and batch_size > 0:
             if self.T.shape[0].value is not None and self.T.shape[0].value is not batch_size:
                 raise RuntimeError('When using batch evaluation, the first dimension of the target tensor '
-                                   'must be compatible with the batch size. Found %s instead' % self.T.shape[0].value)
+                                    'must be compatible with the batch size. Found %s instead' % self.T.shape[0].value)
             if isinstance(self.X, list):
                 for x in self.X:
                     if x.shape[0].value is not None and x.shape[0].value is not batch_size:
                         raise RuntimeError('When using batch evaluation, the first dimension of the input tensor '
-                                           'must be compatible with the batch size. Found %s instead' % x.shape[
-                                               0].value)
+                                            'must be compatible with the batch size. Found %s instead' % x.shape[
+                                                0].value)
             else:
                 if self.X.shape[0].value is not None and self.X.shape[0].value is not batch_size:
                     raise RuntimeError('When using batch evaluation, the first dimension of the input tensor '
-                                       'must be compatible with the batch size. Found %s instead' % self.X.shape[0].value)
+                                        'must be compatible with the batch size. Found %s instead' % self.X.shape[0].value)
 
     def _session_run_batch(self, T, xs, ys=None):
         feed_dict = {}
@@ -140,12 +140,12 @@ class AttributionMethod(object):
             num_samples = len(xs[0])
             if len(xs) != len(self.X):
                 raise RuntimeError('List of input tensors and input data have different lengths (%s and %s)'
-                                   % (str(len(xs)), str(len(self.X))))
+                                    % (str(len(xs)), str(len(self.X))))
             if batch_size is not None:
                 for xi in xs:
                     if len(xi) != num_samples:
                         raise RuntimeError('Evaluation in batches requires all inputs to have '
-                                           'the same number of samples')
+                                            'the same number of samples')
 
         if batch_size is None or batch_size <= 0 or num_samples <= batch_size:
             return self._session_run_batch(T, xs, ys)
@@ -188,13 +188,13 @@ class AttributionMethod(object):
                         self.baseline[i] = np.expand_dims(self.baseline[i], 0)
                     else:
                         raise RuntimeError('Baseline shape %s does not match expected shape %s'
-                                           % (self.baseline[i].shape, self.X.get_shape().as_list()[1:]))
+                                            % (self.baseline[i].shape, self.X.get_shape().as_list()[1:]))
             else:
                 if list(self.baseline.shape) == self.X.get_shape().as_list()[1:]:
                     self.baseline = np.expand_dims(self.baseline, 0)
                 else:
                     raise RuntimeError('Baseline shape %s does not match expected shape %s'
-                                       % (self.baseline.shape, self.X.get_shape().as_list()[1:]))
+                                        % (self.baseline.shape, self.X.get_shape().as_list()[1:]))
 
 
 class GradientBasedMethod(AttributionMethod):
@@ -221,8 +221,8 @@ class GradientBasedMethod(AttributionMethod):
 
 class PerturbationBasedMethod(AttributionMethod):
     """
-       Base class for perturbation-based attribution methods
-       """
+        Base class for perturbation-based attribution methods
+    """
     def __init__(self, T, X, session, keras_learning_phase):
         super(PerturbationBasedMethod, self).__init__(T, X, session, keras_learning_phase)
         self.base_activation = None
@@ -370,7 +370,7 @@ class DeepLIFTRescale(GradientBasedMethod):
         sys.stdout.flush()
         self._deeplift_ref.clear()
         ops = []
-        g = tf.get_default_graph()
+        g = tf.compat.v1.get_default_graph()
         for op in g.get_operations():
             if len(op.inputs) > 0 and not op.name.startswith('gradients'):
                 if op.type in SUPPORTED_ACTIVATIONS:
@@ -450,7 +450,7 @@ class Occlusion(PerturbationBasedMethod):
         attribution = np.reshape(heatmap / w, xs.shape)
         if np.isnan(attribution).any():
             warnings.warn('Attributions generated by Occlusion method contain nans, '
-                          'probably because window_shape and step do not allow to cover the all input.')
+                            'probably because window_shape and step do not allow to cover the all input.')
         return attribution
 
 
@@ -460,7 +460,7 @@ Computes approximate Shapley Values using "Polynomial calculation of the Shapley
 Castro et al, 2009 (https://www.sciencedirect.com/science/article/pii/S0305054808000804)
 
 samples : integer (default 5)
-Defined the number of samples for each input feature. 
+Defined the number of samples for each input feature.
 Notice that evaluating a model samples * n_input_feature times might take a while.
 
 sampling_dims : list of dimension indexes to run sampling on (feature dimensions).
@@ -553,7 +553,7 @@ def deepexplain_grad(op, grad):
 
 class DeepExplain(object):
 
-    def __init__(self, graph=None, session=tf.get_default_session()):
+    def __init__(self, graph=None, session=tf.compat.v1.get_default_session()):
         self.method = None
         self.batch_size = None
         self.session = session
@@ -603,14 +603,14 @@ class DeepExplain(object):
 
         _ENABLED_METHOD_CLASS = method_class
         method = _ENABLED_METHOD_CLASS(T, X,
-                                       self.session,
-                                       keras_learning_phase=self.keras_phase_placeholder,
+                                        self.session,
+                                        keras_learning_phase=self.keras_phase_placeholder,
                                        **kwargs)
 
         if issubclass(_ENABLED_METHOD_CLASS, GradientBasedMethod) and _GRAD_OVERRIDE_CHECKFLAG == 0:
             warnings.warn('DeepExplain detected you are trying to use an attribution method that requires '
-                          'gradient override but the original gradient was used instead. You might have forgot to '
-                          '(re)create your graph within the DeepExlain context. Results are not reliable!')
+                            'gradient override but the original gradient was used instead. You might have forgot to '
+                            '(re)create your graph within the DeepExlain context. Results are not reliable!')
         _ENABLED_METHOD_CLASS = None
         _GRAD_OVERRIDE_CHECKFLAG = 0
         self.keras_phase_placeholder = None
@@ -629,15 +629,15 @@ class DeepExplain(object):
         Heuristically check if any op is in the list of unsupported activation functions.
         This does not cover all cases where explanation methods would fail, and must be improved in the future.
         Also, check if the placeholder named 'keras_learning_phase' exists in the graph. This is used by Keras
-         and needs to be passed in feed_dict.
+        and needs to be passed in feed_dict.
         :return:
         """
-        g = tf.get_default_graph()
+        g = tf.compat.v1.get_default_graph()
         for op in g.get_operations():
             if len(op.inputs) > 0 and not op.name.startswith('gradients'):
                 if op.type in UNSUPPORTED_ACTIVATIONS:
                     warnings.warn('Detected unsupported activation (%s). '
-                                  'This might lead to unexpected or wrong results.' % op.type)
+                                    'This might lead to unexpected or wrong results.' % op.type)
             elif 'keras_learning_phase' in op.name:
                 self.keras_phase_placeholder = op.outputs[0]
 

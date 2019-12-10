@@ -10,9 +10,9 @@ import tensorflow as tf
 
 from tensorflow.python.ops import nn_grad, math_grad
 
-from .utils import make_batches, slice_arrays, to_list, unpack_singleton, placeholder_from_data, original_grad, activation
-from .baseClasses import GradientBasedMethod, PerturbationBasedMethod
-from . import constants
+from deepexplain.tf.v1_x.utils import make_batches, slice_arrays, to_list, unpack_singleton, placeholder_from_data, original_grad, activation
+from deepexplain.tf.v1_x.baseClasses import GradientBasedMethod, PerturbationBasedMethod
+from deepexplain.tf.v1_x import constants
 
 
 # -----------------------------------------------------------------------------
@@ -273,7 +273,7 @@ class ShapleySampling(PerturbationBasedMethod):
         for j in self.sampling_dims:
             reconstruction_shape.append(xs_shape[j])
 
-        for r in range(self.samples):
+        for _ in range(self.samples):
             p = np.random.permutation(n_features)
             x = xs.copy().reshape(run_shape)
             y = None

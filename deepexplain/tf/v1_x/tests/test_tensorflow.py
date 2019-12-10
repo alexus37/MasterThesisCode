@@ -8,9 +8,10 @@ import tempfile
 import sys
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
+
 sys.path.insert(0, os.path.abspath('../..'))
-from deepexplain.tensorflow import DeepExplain
-from deepexplain.tensorflow.utils import original_grad  # test only
+from ..main import DeepExplain
+from ..utils import original_grad  # test only
 
 
 activations = {'Relu': tf.nn.relu,
@@ -169,7 +170,7 @@ class TestDeepExplainGeneralTF(TestCase):
         DeepExplain overrides nonlinearity gradient
         """
         # No override
-        from deepexplain.tensorflow import DeepExplain
+        from ..main import DeepExplain
 
         X = tf.compat.v1.placeholder("float", [None, 1])
         for name in activations:

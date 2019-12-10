@@ -7,11 +7,11 @@ from tensorflow.python.framework import ops
 from collections import OrderedDict
 import warnings, logging
 
-from . import constants
-from .baseClasses import GradientBasedMethod
-from .utils import original_grad
+from deepexplain.tf.v1_x import constants
+from deepexplain.tf.v1_x.baseClasses import GradientBasedMethod
+from deepexplain.tf.v1_x.utils import original_grad
 
-from .methods import DummyZero, Saliency, GradientXInput, IntegratedGradients, EpsilonLRP, DeepLIFTRescale, Occlusion, ShapleySampling
+from deepexplain.tf.v1_x.methods import DummyZero, Saliency, GradientXInput, IntegratedGradients, EpsilonLRP, DeepLIFTRescale, Occlusion, ShapleySampling
 attribution_methods = OrderedDict({
     'zero': (DummyZero, 0),
     'saliency': (Saliency, 1),

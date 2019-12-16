@@ -1,3 +1,8 @@
+# data
+experiments/data/
+experiments/logs/
+experiments/models/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

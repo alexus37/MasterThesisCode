@@ -1,7 +1,9 @@
 from skimage import feature, transform
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
-
+from IPython.display import IFrame
+import warnings
 
 def plot(data, xi=None, cmap='RdBu_r', axis=plt, percentile=100, dilation=3.0, alpha=0.8):
     dx, dy = 0.05, 0.05
@@ -34,3 +36,29 @@ def plot(data, xi=None, cmap='RdBu_r', axis=plt, percentile=100, dilation=3.0, a
         axis.imshow(overlay, extent=extent, interpolation='none', cmap=cmap_xi, alpha=alpha)
     axis.axis('off')
     return axis
+
+def is_port_in_use(port):
+    import socket
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        return s.connect_ex(('localhost', port)) == 0
+
+def compare_images(img1, img2):
+    if not is_port_in_use(8000):
+        warnings.warn('The server seems not to be running pls start with: python -m http.server')
+        return
+    
+    # save the images
+    abs_max = np.percentile(np.abs(img1), 100)
+    abs_min = abs_max
+    plt.imsave('./diffViewer/first.png', img1, cmap='Greys', vmin=-abs_min, vmax=abs_max)
+    
+    colormap_transparent = mpl.colors.LinearSegmentedColormap.from_list('my_cmap',['blue','red'], 256)
+    colormap_transparent._init() # create the _lut array, with rgba values
+
+    alphas = np.linspace(0, 2.0 * np.pi, colormap_transparent.N+3)
+    colormap_transparent._lut[:,-1] = list(map(lambda x : np.clip(np.cos(x) + 0.5, 0.0, 1.0), alphas))
+    
+    plt.imsave('./diffViewer/second.png', img2, cmap=colormap_transparent)
+    
+    return IFrame(src='http://0.0.0.0:8000/index.html', width=700, height=600)
+    

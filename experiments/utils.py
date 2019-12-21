@@ -4,6 +4,23 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from IPython.display import IFrame
 import warnings
+import http.server
+import socketserver
+
+
+def run_server(websocket_handler, port=1234):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    start_server = websockets.serve(websocket_handler, "127.0.0.1", port)
+    loop.run_until_complete(start_server)
+    loop.run_forever()
+
+def run_http_server(port = 8080):
+    Handler = http.server.SimpleHTTPRequestHandler
+
+    with socketserver.TCPServer(("", port), Handler) as httpd:
+        print("serving at port", port)
+        httpd.serve_forever()
 
 def plot(data, xi=None, cmap='RdBu_r', axis=plt, percentile=100, dilation=3.0, alpha=0.8):
     dx, dy = 0.05, 0.05

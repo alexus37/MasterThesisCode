@@ -6,9 +6,11 @@ from IPython.display import IFrame
 import warnings
 import http.server
 import socketserver
+import asyncio
+import websockets
 
-
-def run_server(websocket_handler, port=1234):
+def run_websocket_server(websocket_handler, port=1234):
+    print(f'Starting websocket server on port {port}')
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     start_server = websockets.serve(websocket_handler, "127.0.0.1", port)

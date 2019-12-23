@@ -69,7 +69,7 @@ def compare_images(img1, img2):
     # save the images
     abs_max = np.percentile(np.abs(img1), 100)
     abs_min = abs_max
-    plt.imsave('./diffViewer/first.png', img1, cmap='Greys', vmin=-abs_min, vmax=abs_max)
+    plt.imsave('./html/first.png', img1, cmap='Greys', vmin=-abs_min, vmax=abs_max)
     
     colormap_transparent = mpl.colors.LinearSegmentedColormap.from_list('my_cmap',['blue','red'], 256)
     colormap_transparent._init() # create the _lut array, with rgba values
@@ -77,7 +77,7 @@ def compare_images(img1, img2):
     alphas = np.linspace(0, 2.0 * np.pi, colormap_transparent.N+3)
     colormap_transparent._lut[:,-1] = list(map(lambda x : np.clip(np.cos(x) + 0.5, 0.0, 1.0), alphas))
     
-    plt.imsave('./diffViewer/second.png', img2, cmap=colormap_transparent)
+    plt.imsave('./html/second.png', img2, cmap=colormap_transparent)
     
-    return IFrame(src='http://0.0.0.0:8000/index.html', width=700, height=600)
+    return IFrame(src='http://0.0.0.0:8000/html/diffViewer.html', width=700, height=600)
     

@@ -2,7 +2,7 @@
 experiments/data/
 experiments/logs/
 experiments/models/
-experiments/.ipynb_checkpoints
+.ipynb_checkpoints
 examples/data/
 examples/models/
 

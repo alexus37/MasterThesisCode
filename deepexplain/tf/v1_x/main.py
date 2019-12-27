@@ -102,6 +102,7 @@ class DeepExplain(object):
 
     def explain(self, method, T, X, xs, ys=None, batch_size=None, **kwargs):
         explainer = self.get_explainer(method, T, X, **kwargs)
+        print('Runing explainer')
         return explainer.run(xs, ys, batch_size)
 
     @staticmethod

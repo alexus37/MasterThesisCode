@@ -171,6 +171,6 @@ class PerturbationBasedMethod(AttributionMethod):
     """
         Base class for perturbation-based attribution methods
     """
-    def __init__(self, T, X, session, keras_learning_phase):
-        super(PerturbationBasedMethod, self).__init__(T, X, session, keras_learning_phase)
+    def __init__(self, T, X, session, keras_learning_phase, Y_shape):
+        super(PerturbationBasedMethod, self).__init__(T, X, session, keras_learning_phase, Y_shape)
         self.base_activation = None

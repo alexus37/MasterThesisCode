@@ -9,7 +9,7 @@ import warnings, logging
 import tensorflow as tf
 
 from tensorflow.python.ops import nn_grad, math_grad
-
+from tqdm import tqdm
 from deepexplain.tf.v1_x.utils import make_batches, slice_arrays, to_list, unpack_singleton, placeholder_from_data, original_grad, activation
 from deepexplain.tf.v1_x.baseClasses import GradientBasedMethod, PerturbationBasedMethod
 from deepexplain.tf.v1_x import constants
@@ -171,8 +171,8 @@ If integer is given, then the step is uniform in all dimensions.
 """
 class Occlusion(PerturbationBasedMethod):
 
-    def __init__(self, T, X, session, keras_learning_phase, window_shape=None, step=None):
-        super(Occlusion, self).__init__(T, X, session, keras_learning_phase)
+    def __init__(self, T, X, session, keras_learning_phase, window_shape=None, step=None, Y_shape=None):
+        super(Occlusion, self).__init__(T, X, session, keras_learning_phase, Y_shape)
         if self.has_multiple_inputs:
             raise RuntimeError('Multiple inputs not yet supported for perturbation methods')
 
@@ -209,7 +209,7 @@ class Occlusion(PerturbationBasedMethod):
         eval0 = self._session_run(self.T, xs, ys, batch_size)
 
         # Start perturbation loop
-        for i, p in enumerate(idx_patches):
+        for i, p in enumerate(tqdm(idx_patches)):
             mask = np.ones(input_shape).flatten()
             mask[p.flatten()] = self.replace_value
             masked_xs = mask.reshape((1,) + input_shape) * xs

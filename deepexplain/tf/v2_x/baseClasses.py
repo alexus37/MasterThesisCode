@@ -16,10 +16,10 @@ class AttributionMethod(object):
     """
     Attribution method base class
     """
-    def __init__(self, T, X, session, keras_learning_phase=None):
+    def __init__(self, T, X, session, keras_learning_phase=None, Y_shape=None):
         self.T = T  # target Tensor
         self.X = X  # input Tensor
-        self.Y_shape = [None,] + T.get_shape().as_list()[1:]
+        self.Y_shape = Y_shape if Y_shape is not None else [None,] + T.get_shape().as_list()[1:]
         # Most often T contains multiple output units. In this case, it is often necessary to select
         # a single unit to compute contributions for. This can be achieved passing 'ys' as weight for the output Tensor.
         self.Y = tf.compat.v1.placeholder(tf.float32, self.Y_shape)

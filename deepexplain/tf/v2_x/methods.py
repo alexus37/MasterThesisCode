@@ -8,6 +8,7 @@ from skimage.util import view_as_windows
 import warnings
 import logging
 import tensorflow as tf
+from tqdm import tqdm
 
 from tensorflow.python.ops import nn_grad, math_grad
 
@@ -217,7 +218,7 @@ class Occlusion(PerturbationBasedMethod):
         eval0 = self._session_run(self.T, xs, ys, batch_size)
 
         # Start perturbation loop
-        for i, p in enumerate(idx_patches):
+        for i, p in enumerate(tqdm(idx_patches)):
             mask = np.ones(input_shape).flatten()
             mask[p.flatten()] = self.replace_value
             masked_xs = mask.reshape((1,) + input_shape) * xs
@@ -249,8 +250,8 @@ To sample pixels, instead, use sampling_dims=[1,2]
 """
 class ShapleySampling(PerturbationBasedMethod):
 
-    def __init__(self, T, X, session, keras_learning_phase, samples=5, sampling_dims=None):
-        super(ShapleySampling, self).__init__(T, X, session, keras_learning_phase)
+    def __init__(self, T, X, session, keras_learning_phase, samples=5, sampling_dims=None, Y_shape=None):
+        super(ShapleySampling, self).__init__(T, X, session, keras_learning_phase, Y_shape)
         if self.has_multiple_inputs:
             raise RuntimeError('Multiple inputs not yet supported for perturbation methods')
         dims = len(X.shape)

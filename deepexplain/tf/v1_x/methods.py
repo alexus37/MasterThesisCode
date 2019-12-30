@@ -58,16 +58,16 @@ https://arxiv.org/pdf/1703.01365.pdf
 """
 class IntegratedGradients(GradientBasedMethod):
 
-    def __init__(self, T, X, session, keras_learning_phase, steps=100, baseline=None):
+    def __init__(self, T, X, session, keras_learning_phase, steps=100, baseline=None, Y_shape=None):
         self.steps = steps
         self.baseline = baseline
-        super(IntegratedGradients, self).__init__(T, X, session, keras_learning_phase)
+        super(IntegratedGradients, self).__init__(T, X, session, keras_learning_phase, Y_shape)
 
     def run(self, xs, ys=None, batch_size=None):
         self._check_input_compatibility(xs, ys, batch_size)
 
         gradient = None
-        for alpha in list(np.linspace(1. / self.steps, 1.0, self.steps)):
+        for alpha in tqdm(list(np.linspace(1. / self.steps, 1.0, self.steps))):
             xs_mod = [b + (x - b) * alpha for x, b in zip(xs, self.baseline)] if self.has_multiple_inputs \
                 else self.baseline + (xs - self.baseline) * alpha
             _attr = self._session_run(self.explain_symbolic(), xs_mod, ys, batch_size)

@@ -119,6 +119,18 @@ class AttributionMethod(object):
                     outs[i][batch_start:batch_end] = batch_out
             return unpack_singleton(outs)
 
+    @staticmethod
+    def compare_shape(l1, l2):
+        if len(l1) != len(l2):
+            return False
+        else:
+            for elm1, elm2 in zip(l1, l2):
+                if elm1 is None or elm2 is None: # None is like a place holder
+                    continue
+                elif elm1 != elm2:
+                    return False
+            return True
+
     def _set_check_baseline(self):
         # Do nothing for those methods that have no baseline required
         if not hasattr(self, "baseline"):
@@ -133,13 +145,13 @@ class AttributionMethod(object):
         else:
             if self.has_multiple_inputs:
                 for i, xi in enumerate(self.X):
-                    if list(self.baseline[i].shape) == xi.get_shape().as_list()[1:]:
+                    if AttributionMethod.compare_shape(list(self.baseline[i].shape), xi.get_shape().as_list()[1:]):
                         self.baseline[i] = np.expand_dims(self.baseline[i], 0)
                     else:
                         raise RuntimeError('Baseline shape %s does not match expected shape %s'
                                             % (self.baseline[i].shape, self.X.get_shape().as_list()[1:]))
             else:
-                if list(self.baseline.shape) == self.X.get_shape().as_list()[1:]:
+                if AttributionMethod.compare_shape(self.baseline.shape, self.X.get_shape().as_list()[1:]):
                     self.baseline = np.expand_dims(self.baseline, 0)
                 else:
                     raise RuntimeError('Baseline shape %s does not match expected shape %s'

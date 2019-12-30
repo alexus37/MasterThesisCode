@@ -67,11 +67,11 @@ http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0130140
 class EpsilonLRP(GradientBasedMethod):
     eps = None
 
-    def __init__(self, T, X, session, keras_learning_phase, epsilon=1e-4):
+    def __init__(self, T, X, session, keras_learning_phase, epsilon=1e-4, Y_shape=None):
         assert epsilon > 0.0, 'LRP epsilon must be greater than zero'
         global eps
         eps = epsilon
-        super(EpsilonLRP, self).__init__(T, X, session, keras_learning_phase)
+        super(EpsilonLRP, self).__init__(T, X, session, keras_learning_phase, Y_shape)
 
     def get_symbolic_attribution(self):
         return [g * x for g, x in zip(

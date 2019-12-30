@@ -116,9 +116,9 @@ class DeepLIFTRescale(GradientBasedMethod):
 
     _deeplift_ref = {}
 
-    def __init__(self, T, X, session, keras_learning_phase, baseline=None):
+    def __init__(self, T, X, session, keras_learning_phase, baseline=None, Y_shape=None):
         self.baseline = baseline
-        super(DeepLIFTRescale, self).__init__(T, X, session, keras_learning_phase)
+        super(DeepLIFTRescale, self).__init__(T, X, session, keras_learning_phase, Y_shape)
 
     def get_symbolic_attribution(self):
         return [g * (x - b) for g, x, b in zip(

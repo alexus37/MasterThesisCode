@@ -241,8 +241,8 @@ To sample pixels, instead, use sampling_dims=[1,2]
 """
 class ShapleySampling(PerturbationBasedMethod):
 
-    def __init__(self, T, X, session, keras_learning_phase, samples=5, sampling_dims=None):
-        super(ShapleySampling, self).__init__(T, X, session, keras_learning_phase)
+    def __init__(self, T, X, session, keras_learning_phase, samples=5, sampling_dims=None, Y_shape=None):
+        super(ShapleySampling, self).__init__(T, X, session, keras_learning_phase, Y_shape)
         if self.has_multiple_inputs:
             raise RuntimeError('Multiple inputs not yet supported for perturbation methods')
         dims = len(X.shape)
@@ -272,20 +272,21 @@ class ShapleySampling(PerturbationBasedMethod):
         reconstruction_shape = [xs_shape[0]]
         for j in self.sampling_dims:
             reconstruction_shape.append(xs_shape[j])
-
-        for _ in range(self.samples):
-            p = np.random.permutation(n_features)
-            x = xs.copy().reshape(run_shape)
-            y = None
-            for i in p:
-                if y is None:
-                    y = self._session_run(self.T, x.reshape(xs_shape), ys, batch_size)
-                x[:, i] = 0
-                y0 = self._session_run(self.T, x.reshape(xs_shape), ys, batch_size)
-                delta = y - y0
-                delta_aggregated = np.sum(delta.reshape((batch_size, -1)), -1, keepdims=False)
-                result[:, i] += delta_aggregated
-                y = y0
+        with tqdm(total=self.samples * n_features) as pbar:
+            for _ in range(self.samples):
+                p = np.random.permutation(n_features)
+                x = xs.copy().reshape(run_shape)
+                y = None
+                for i in p:
+                    if y is None:
+                        y = self._session_run(self.T, x.reshape(xs_shape), ys, batch_size)
+                    x[:, i] = 0
+                    y0 = self._session_run(self.T, x.reshape(xs_shape), ys, batch_size)
+                    delta = y - y0
+                    delta_aggregated = np.sum(delta.reshape((batch_size, -1)), -1, keepdims=False)
+                    result[:, i] += delta_aggregated
+                    y = y0
+                    pbar.update(1)
 
         shapley = result / self.samples
         return shapley.reshape(reconstruction_shape)

@@ -29,7 +29,7 @@ class AttributionMethod(object):
         self.session = session
         self.keras_learning_phase = keras_learning_phase
         self.has_multiple_inputs = type(self.X) is list or type(self.X) is tuple
-        logging.info('Model with multiple inputs: %s' % self.has_multiple_inputs)
+        # logging.info('Model with multiple inputs: %s' % self.has_multiple_inputs)
 
         # Set baseline
         # TODO: now this sets a baseline also for those methods that does not require it

@@ -80,8 +80,7 @@ class DeepExplain(object):
 
         if 'tensor' not in str(type(T)).lower():
             raise RuntimeError('T must be a Tensorflow Tensor object')
-
-        logging.info('DeepExplain: running "%s" explanation method (%d)' % (self.method, method_flag))
+        # logging.info('DeepExplain: running "%s" explanation method (%d)' % (self.method, method_flag))
         self._check_ops()
         constants._GRAD_OVERRIDE_CHECKFLAG = 0
 

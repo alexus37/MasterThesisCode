@@ -108,3 +108,4 @@ def plot_vector_field(U, V, bgimg, axis, figure):
     #ax = fig.add_subplot(1, 2, 2)
     #heat_image = ax.imshow(color)
     #fig.colorbar(heat_image, ax=ax, shrink=1.0)
+    

@@ -81,3 +81,30 @@ def compare_images(img1, img2):
     
     return IFrame(src='http://0.0.0.0:8000/html/diffViewer.html', width=700, height=600)
     
+def plot_vector_field(U, V, bgimg, axis, figure):
+    axis.imshow(bgimg, alpha=1)
+    X, Y = np.meshgrid(range(0, bgimg.shape[1]), range(0, bgimg.shape[0]))
+
+    color = np.sqrt(np.square(U) + np.square(V)) 
+
+    # normalize
+    #U /= color
+    #V /= color
+
+    colormap_transparent = mpl.colors.LinearSegmentedColormap.from_list('my_cmap',['blue','red'], 256)
+    colormap_transparent._init() # create the _lut array, with rgba values
+
+    alphas = np.linspace(0, 1.0, colormap_transparent.N+3)
+    colormap_transparent._lut[:,-1] = alphas # list(map(lambda x : 1.0 if x > 0.3 else 0.0, alphas))
+
+    heat_image = axis.quiver(X, Y, U, V, color, cmap=colormap_transparent, scale=40)
+    #heat_image = ax.imshow(V, cmap=plt.cm.hot, alpha=0.5)
+
+
+    axis.set_title('PAF')
+    figure.colorbar(heat_image, ax=axis, shrink=1.0)
+
+    return axis
+    #ax = fig.add_subplot(1, 2, 2)
+    #heat_image = ax.imshow(color)
+    #fig.colorbar(heat_image, ax=ax, shrink=1.0)

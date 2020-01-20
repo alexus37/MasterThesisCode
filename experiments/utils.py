@@ -8,6 +8,9 @@ import http.server
 import socketserver
 import asyncio
 import websockets
+from tf_pose.estimator import TfPoseEstimator
+from tf_pose import common
+import cv2
 
 def run_websocket_server(websocket_handler, port=1234):
     print(f'Starting websocket server on port {port}')
@@ -109,3 +112,54 @@ def plot_vector_field(U, V, bgimg, axis, figure):
     #heat_image = ax.imshow(color)
     #fig.colorbar(heat_image, ax=ax, shrink=1.0)
     
+    
+def plot_pose(image, humans, heatMat):
+    image_result = TfPoseEstimator.draw_humans(image, humans, imgcopy=True)
+
+    fig = plt.figure(figsize=(50, 25))
+    a = fig.add_subplot(2, 1, 1)
+    a.set_title('Result')
+    plt.imshow(cv2.cvtColor(image_result, cv2.COLOR_BGR2RGB))
+
+    bgimg = cv2.cvtColor(image_result.astype(np.uint8), cv2.COLOR_BGR2RGB)
+    bgimg = cv2.resize(bgimg, (heatMat.shape[1], heatMat.shape[0]), interpolation=cv2.INTER_AREA)
+
+    # show network output
+    a = fig.add_subplot(2, 2, 2)
+    plt.imshow(bgimg, alpha=0.5)
+    tmp = np.amax(heatMat[:, :, :-1], axis=2)
+    plt.imshow(tmp, cmap=plt.cm.gray, alpha=0.5)
+    _ = plt.colorbar()
+    
+def get_humans_as_lines(humans, image_h, image_w):
+    centers = {}
+    lines = []
+    for human in humans:
+        # draw point
+        for i in range(common.CocoPart.Background.value):
+            if i not in human.body_parts.keys():
+                continue
+
+            body_part = human.body_parts[i]
+            center = (int(body_part.x * image_w + 0.5), image_h - int(body_part.y * image_h + 0.5))
+            centers[i] = center
+            
+        # draw line
+        for pair_order, pair in enumerate(common.CocoPairsRender):
+            if pair[0] not in human.body_parts.keys() or pair[1] not in human.body_parts.keys():
+                continue
+
+            
+            line = [centers[pair[0]], centers[pair[1]]]
+            lines.append(line)
+    return lines
+
+def plot_human_lines(lines, axis, color = 'r', linestyle='-', label='human'):
+    for line in lines:
+        x = [line[0][0], line[1][0]]
+        y = [line[0][1], line[1][1]]
+        axis.plot(x, y, color=color, linestyle=linestyle, label=label, marker='o')
+        
+        
+def is_same_image(a, b):
+    return np.sum(np.abs(a-b))

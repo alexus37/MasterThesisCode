@@ -163,3 +163,25 @@ def plot_human_lines(lines, axis, color = 'r', linestyle='-', label='human'):
         
 def is_same_image(a, b):
     return np.sum(np.abs(a-b))
+
+def put_heatmap(heatmap, plane_idx, center, sigma):
+        center_x, center_y = center
+        _, height, width = heatmap.shape[:3]
+
+        th = 4.6052
+        delta = math.sqrt(th * 2)
+
+        x0 = int(max(0, center_x - delta * sigma))
+        y0 = int(max(0, center_y - delta * sigma))
+
+        x1 = int(min(width, center_x + delta * sigma))
+        y1 = int(min(height, center_y + delta * sigma))
+
+        for y in range(y0, y1):
+            for x in range(x0, x1):
+                d = (x - center_x) ** 2 + (y - center_y) ** 2
+                exp = d / 2.0 / sigma / sigma
+                if exp > th:
+                    continue
+                heatmap[plane_idx][y][x] = max(heatmap[plane_idx][y][x], math.exp(-exp))
+                heatmap[plane_idx][y][x] = min(heatmap[plane_idx][y][x], 1.0)

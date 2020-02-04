@@ -165,7 +165,7 @@ echo -e "Local port: $PORTN"
 
 # setup SSH tunnel from local computer to compute node via login node
 echo -e "Setting up SSH tunnel for connecting the browser to the jupyter notebook"
-ssh $USERNAME@$CHOSTNAME -L $PORTN:$remoteip:$remoteport -N &
+ssh $USERNAME@$CHOSTNAME -L $PORTN:$remoteip:$remoteport -L 6006:$remoteip:6006 -N &
 
 # SSH tunnel is started in the background, pause 5 seconds to make sure
 # it is established before starting the browser

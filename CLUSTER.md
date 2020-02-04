@@ -16,6 +16,15 @@ Then run this script locally
 ./start_jupyter_nb.sh LeoOpen alelidis 8 01:20 4096 1
 ```
 
+Then connect tensorboard.
+
+```bash
+	ssh <user>@login.leonhard.ethz.ch -L localhost:17605:localhost:17605
+	cd DeepExplain/experiments/logs
+	 module load python_gpu/3.6.4
+	tensorboard --logdir ./adv --host "0.0.0.0" --port 17605
+```
+
 When done hit logout in notebook
 
 ## Setup

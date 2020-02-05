@@ -89,7 +89,7 @@ if ! [[ "$MEM_PER_CORE" =~ ^[0-9]+$ ]]
         print_usage
         exit
 fi
-echo -e "Memory per core set to $MEM_PER_CORE MB\n"
+echo -e "Memory per core set to $MEM_PER_CORE MB"
 
 # number of cores to be used
 NUM_GPUS=$6
@@ -125,6 +125,8 @@ IP_REMOTE="\$(hostname -i)"
 echo "Remote IP:\$IP_REMOTE" >> /cluster/home/$USERNAME/jnbip
 jupyter notebook --no-browser --ip "\$IP_REMOTE" &> /cluster/home/$USERNAME/jnbinfo
 ENDBSUB
+
+sleep 10
 
 # wait until jupyternotebook has started, poll every 10 seconds to check if $HOME/jupyternbinfo exists
 # once the file exists and is not empty, the notebook has been startet and is listening
@@ -165,7 +167,7 @@ echo -e "Local port: $PORTN"
 
 # setup SSH tunnel from local computer to compute node via login node
 echo -e "Setting up SSH tunnel for connecting the browser to the jupyter notebook"
-ssh $USERNAME@$CHOSTNAME -L $PORTN:$remoteip:$remoteport -L 6006:$remoteip:6006 -N &
+ssh $USERNAME@$CHOSTNAME -L $PORTN:$remoteip:$remoteport -N &
 
 # SSH tunnel is started in the background, pause 5 seconds to make sure
 # it is established before starting the browser

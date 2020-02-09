@@ -36,7 +36,7 @@ if [ "$CLUSTERNAME" == "Euler" ]; then
     PCOMMAND="new gcc/4.8.2 r/3.6.0 python/3.6.1 eth_proxy"
 elif [ "$CLUSTERNAME" == "LeoOpen" ]; then
     CHOSTNAME="login.leonhard.ethz.ch"
-    PCOMMAND="python_gpu/3.6.4 eth_proxy hdf5/1.10.1"
+    PCOMMAND="python_gpu/3.7.1 eth_proxy hdf5/1.10.1"
 else
     echo -e "Incorrect cluster name. Please specify Euler or LeoOpen as cluster and and try again.\n"
     print_usage
@@ -118,7 +118,7 @@ ENDSSH
 # run the jupyter notebook job on Euler/Leonhard Open and save ip, port and the token
 # in the files jnbip and jninfo in the home directory of the user on Euler/Leonhard Open
 echo -e "Connecting to $CLUSTERNAME to start jupyter notebook in a batch job"
-ssh $USERNAME@$CHOSTNAME bsub -n $NUM_CORES -W $RUN_TIME -R "rusage[mem=$MEM_PER_CORE,ngpus_excl_p=$NUM_GPUS]"  <<ENDBSUB
+ssh $USERNAME@$CHOSTNAME bsub -n $NUM_CORES -W $RUN_TIME -G ls_grossm  -R "rusage[mem=$MEM_PER_CORE,ngpus_excl_p=$NUM_GPUS]"  <<ENDBSUB
 module load $PCOMMAND
 export XDG_RUNTIME_DIR=
 IP_REMOTE="\$(hostname -i)"

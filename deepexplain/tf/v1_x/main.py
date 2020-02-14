@@ -9,6 +9,7 @@ import warnings, logging
 
 from deepexplain.tf.v1_x import constants
 from deepexplain.tf.v1_x.baseClasses import GradientBasedMethod
+from deepexplain.tf.v1_x.methods import DeepLIFTRescale, EpsilonLRP
 from deepexplain.tf.v1_x.utils import original_grad
 
 from deepexplain.tf.v1_x.methods import DummyZero, Saliency, GradientXInput, IntegratedGradients, EpsilonLRP, DeepLIFTRescale, Occlusion, ShapleySampling
@@ -90,7 +91,8 @@ class DeepExplain(object):
                                         keras_learning_phase=self.keras_phase_placeholder,
                                        **kwargs)
 
-        if issubclass(constants._ENABLED_METHOD_CLASS, GradientBasedMethod) and constants._GRAD_OVERRIDE_CHECKFLAG == 0:
+        if (issubclass(constants._ENABLED_METHOD_CLASS, DeepLIFTRescale) or issubclass(constants._ENABLED_METHOD_CLASS, EpsilonLRP)) \
+            and constants._GRAD_OVERRIDE_CHECKFLAG == 0:
             warnings.warn('DeepExplain detected you are trying to use an attribution method that requires '
                             'gradient override but the original gradient was used instead. You might have forgot to '
                             '(re)create your graph within the DeepExlain context. Results are not reliable!')

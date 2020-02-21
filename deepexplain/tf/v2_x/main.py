@@ -28,7 +28,7 @@ attribution_methods = OrderedDict({
 print(f'Using tf version = {tf.__version__}')
 
 
-@ops.RegisterGradient("DeepExplainGrad")
+@ops.RegisterGradient("DeepExplainGrad2")
 def deepexplain_grad(op, grad):
     constants._GRAD_OVERRIDE_CHECKFLAG = 1
     if constants._ENABLED_METHOD_CLASS is not None \

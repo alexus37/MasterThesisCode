@@ -1,7 +1,6 @@
 # data
 experiments/data/
 experiments/logs/
-experiments/models/
 .ipynb_checkpoints
 examples/data/
 examples/models/
@@ -80,12 +79,7 @@ examples/\.ipynb_checkpoints/
 
 *.data-00000-of-00001
 
-*.h5
 
-*.hdf5
 
-*.npy
-
-*.html
 
 *.p

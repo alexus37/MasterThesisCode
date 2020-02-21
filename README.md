@@ -62,7 +62,7 @@ The method `explain` must be called within a DeepExplain context:
 
 ```python
 # Pseudo-code
-from deepexplain.tensorflow import DeepExplain
+from deepexplain.tf.v1_x import DeepExplain
 
 # Option 1. Create and train your model within a DeepExplain context
 
@@ -196,21 +196,6 @@ Models with multiple inputs are supported for gradient-based methods. Instead, t
 called on a model with multiple inputs (how perturbation should be generated for multiple inputs is actually not well defined).
 
 For a minimal (toy) example see the [example folder](https://github.com/marcoancona/DeepExplain/tree/master/examples).
-
-### Using docker
-
-```bash
-    docker build -t ax_tf_gpu .
-```
-
-then inside docker install tf pose
-
-```bash
-    git clone https://www.github.com/ildoonet/tf-pose-estimation
-    cd tf-pose-estimation
-    pip install cython
-    python setup.py install  # Or, `pip install -e .`
-```
 
 ## Contributing
 

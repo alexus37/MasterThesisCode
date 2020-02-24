@@ -73,7 +73,7 @@ def plot_vector_field(U, V, bgimg, axis, figure):
     #fig.colorbar(heat_image, ax=ax, shrink=1.0)
 
 
-def plot_pose(image, humans, heatMat):
+def plot_pose(image, humans, heatMat=None):
     image_result = TfPoseEstimator.draw_humans(image, humans, imgcopy=True)
 
     fig = plt.figure(figsize=(50, 25))
@@ -82,14 +82,15 @@ def plot_pose(image, humans, heatMat):
     plt.imshow(cv2.cvtColor(image_result, cv2.COLOR_BGR2RGB))
 
     bgimg = cv2.cvtColor(image_result.astype(np.uint8), cv2.COLOR_BGR2RGB)
-    bgimg = cv2.resize(bgimg, (heatMat.shape[1], heatMat.shape[0]), interpolation=cv2.INTER_AREA)
+    bgimg = cv2.resize(bgimg, (image.shape[1], image.shape[0]), interpolation=cv2.INTER_AREA)
 
     # show network output
-    a = fig.add_subplot(2, 2, 2)
-    plt.imshow(bgimg, alpha=0.5)
-    tmp = np.amax(heatMat[:, :, :-1], axis=2)
-    plt.imshow(tmp, cmap=plt.cm.gray, alpha=0.5)
-    _ = plt.colorbar()
+    if heatMat is not None:
+        a = fig.add_subplot(2, 2, 2)
+        plt.imshow(bgimg, alpha=0.5)
+        tmp = np.amax(heatMat[:, :, :-1], axis=2)
+        plt.imshow(tmp, cmap=plt.cm.gray, alpha=0.5)
+        _ = plt.colorbar()
 
 def plot_human_lines(lines, axis, color = 'r', linestyle='-', label='human'):
     for line in lines:

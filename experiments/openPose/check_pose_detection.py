@@ -13,6 +13,7 @@ from tf_pose import common
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose.networks import get_graph_path
 from plot_utils import plot_pose
+from matplotlib import pyplot
 
 def compute_pose(image_path,  width, height, model, resize_out_ratio, show_result):
     image = common.read_imgfile(image_path, width, height)
@@ -22,15 +23,15 @@ def compute_pose(image_path,  width, height, model, resize_out_ratio, show_resul
     if len(humans) == 0:
         print('Nothing was detected')
         return
-    # TODO: check size is correct
-    if len(humans[0].body_parts) != 19:
+
+    if len(humans[0].body_parts) != 18:
         print(f'Partially detected. {len(humans[0].body_parts)} joints found.')
     else:
         print('Full detection!')
 
-    # TODO: check this works
     if show_result:
-        plot_pose(image, humans, estimator.heatMat)
+        plot_pose(image, humans)
+        pyplot.show()
 
 if __name__ == "__main__":
     args = argparse.ArgumentParser('Compute pose of given image')
@@ -42,15 +43,10 @@ if __name__ == "__main__":
     args.add_argument('--model', default='cmu', type=str)
     args.add_argument('--image_path', type=str, required=True)
 
-    current_args = args.parse_args()
+    current_args = vars(args.parse_args())
 
-    # TODO: check if file existsif os.
     # TODO: check if destructing is posible
-    compute_pose(
-        image_path=current_args.image_path,
-        width=current_args.width,
-        height=current_args.height,
-        model=current_args.model,
-        resize_out_ratio=current_args.resize_out_ratio,
-        show_result=current_args.show_result
-    )
+    if not os.path.isfile(current_args['image_path']):
+        print ("Image does not exist")
+    else:
+        compute_pose(**current_args)

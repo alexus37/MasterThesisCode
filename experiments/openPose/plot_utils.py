@@ -82,7 +82,10 @@ def plot_pose(image, humans, heatMat=None):
     plt.imshow(cv2.cvtColor(image_result, cv2.COLOR_BGR2RGB))
 
     bgimg = cv2.cvtColor(image_result.astype(np.uint8), cv2.COLOR_BGR2RGB)
-    bgimg = cv2.resize(bgimg, (image.shape[1], image.shape[0]), interpolation=cv2.INTER_AREA)
+    if heatMat is not None:
+        bgimg = cv2.resize(bgimg, (heatMat.shape[1], heatMat.shape[0]), interpolation=cv2.INTER_AREA)
+    else:
+        bgimg = cv2.resize(bgimg, (image.shape[1], image.shape[0]), interpolation=cv2.INTER_AREA)
 
     # show network output
     if heatMat is not None:

@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='utf-8'?>
+<scene version="0.6.0">
+	<integrator type="direct"/>
+
+
+
+	<shape type="serialized" id="main">
+		<transform name="toWorld">
+			<rotate y="1" angle="15"/>
+            <translate x="50" y="0" z="-50"/>
+		</transform>
+		<string name="filename" value="pose_0_2.serialized"/>
+		<integer name="shapeIndex" value="0"/>
+
+		<bsdf type="diffuse">
+			<texture type="bitmap" name="reflectance">
+				<string name="filename" value="MikeAlger_Texture.jpeg"/>
+			</texture>
+		</bsdf>
+	</shape>
+
+    <shape type="rectangle" id='rect'>
+        <bsdf type="diffuse"/>
+        <transform name="toWorld">
+            <scale x="15.0" y="30.0" z="1.0"/>
+            <translate x="0" y="110" z="15"/>
+            <rotate y="1" angle="15"/>
+            <translate x="50" y="0" z="-50"/>
+		</transform>
+
+    </shape>
+
+	<sensor type="perspective">
+		<float name="farClip" value="2500.0"/>
+		<float name="focusDistance" value="323.643"/>
+		<float name="fov" value="45"/>
+		<string name="fovAxis" value="x"/>
+		<float name="nearClip" value="2.08998"/>
+		<transform name="toWorld">
+			<lookat origin="-4.21425, 105.008, 327.119" up="0.0, 1.0, -0.0" target="-4.1969, 104.951, 326.12"/>
+		</transform>
+
+		<sampler type="independent">
+			<integer name="sampleCount" value="64"/>
+		</sampler>
+
+		<film type="hdrfilm">
+			<rfilter type="gaussian"/>
+			<boolean name="banner" value="false"/>
+		</film>
+	</sensor>
+</scene>

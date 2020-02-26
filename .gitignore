@@ -5,6 +5,9 @@ experiments/logs/
 examples/data/
 examples/models/
 
+#
+*.mip
+
 .env
 
 # Byte-compiled / optimized / DLL files

@@ -32,12 +32,15 @@
 
 	<sensor type="perspective">
 		<float name="farClip" value="2500.0"/>
-		<float name="focusDistance" value="323.643"/>
 		<float name="fov" value="45"/>
-		<string name="fovAxis" value="x"/>
-		<float name="nearClip" value="2.08998"/>
+		<string name="fovAxis" value="y"/>
+		<float name="nearClip" value="2.0"/>
 		<transform name="toWorld">
-			<lookat origin="-4.21425, 105.008, 327.119" up="0.0, 1.0, -0.0" target="-4.1969, 104.951, 326.12"/>
+			<lookat
+				origin="-4.21425, 105.008, 327.119"
+				up="0.0, 1.0, 0.0"
+				target="-4.1969, 104.951, 326.12"
+			/>
 		</transform>
 
 		<sampler type="independent">

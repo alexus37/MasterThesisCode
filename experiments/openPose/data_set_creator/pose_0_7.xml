@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+	Automatically converted from Wavefront OBJ
+
+-->
+
+<scene version="0.6.0">
+	<integrator id="integrator" type="direct"/>
+
+	<bsdf id="material_0_material" type="diffuse">
+		<ref name="reflectance" id="MikeAlger_Texture.jpg"/>
+	</bsdf>
+
+	<shape id="pose_0_7_mesh" type="serialized">
+		<string name="filename" value="pose_0_7.serialized"/>
+		<integer name="shapeIndex" value="0"/>
+		<bsdf type="diffuse"/>
+	</shape>
+
+</scene>

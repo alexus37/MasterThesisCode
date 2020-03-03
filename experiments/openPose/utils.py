@@ -11,6 +11,8 @@ import websockets
 from tf_pose.estimator import TfPoseEstimator
 from tf_pose import common
 import cv2
+import xml.dom.minidom
+import os 
 
 def run_websocket_server(websocket_handler, port=1234):
     print(f'Starting websocket server on port {port}')
@@ -147,3 +149,5 @@ def load_batch(training_paths, start_index, batch_size, width=432, height=368):
         batch.append(common.read_imgfile(str(training_paths[i]), width, height))
         i += 1
     return np.asarray(batch), i
+
+    

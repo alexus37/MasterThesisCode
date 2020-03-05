@@ -14,7 +14,9 @@ VERTICES = np.array([[1.0, 1.0, 0.0],
                         dtype="float32")
 WINDOW_WIDTH, WINDOW_HEIGHT = 768, 576
 
-NOISE_WIDTH, NOISE_HEIGHT = 400, 200
+NOISE_WIDTH, NOISE_HEIGHT = 200, 400
+# images used by the network
+w, h = 432, 368
 
 # camera params
 FAR_CLIP = 2500.0
@@ -93,7 +95,7 @@ class Save2dWarp:
     @staticmethod
     def save_warp_npy(warp, filename):
         # Transform to record for tf
-        tf_foramt = warp.flatten()[:-1]
+        tf_foramt = np.array(warp.flatten()[:-1], dtype=np.float32)
         np.save(filename, tf_foramt)
         print('Saved')
 
@@ -136,7 +138,8 @@ class Save2dWarp:
                 [0, maxHeight - 1]], dtype = "float32")
         dst = Save2dWarp.order_points(np.array(pixel_coordinates))
         # compute the perspective transform matrix and then apply it
-        return cv2.getPerspectiveTransform(src, dst)
+        # transflow needs it in that order cv2 the other way around
+        return cv2.getPerspectiveTransform(dst, src)
 
 def main(file_name):
     if not os.path.isfile(file_name):

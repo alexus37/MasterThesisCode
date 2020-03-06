@@ -12,7 +12,9 @@ VERTICES = np.array([[1.0, 1.0, 0.0],
                     [-1.0, -1.0, 0.0],
                     [-1.0, 1.0, 0.0]],
                         dtype="float32")
-WINDOW_WIDTH, WINDOW_HEIGHT = 768, 576
+# NORI image size
+#WINDOW_WIDTH, WINDOW_HEIGHT = 768, 576
+WINDOW_WIDTH, WINDOW_HEIGHT = 432, 368
 
 NOISE_WIDTH, NOISE_HEIGHT = 200, 400
 # images used by the network

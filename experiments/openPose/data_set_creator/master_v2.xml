@@ -49,6 +49,8 @@
 
 		<film type="hdrfilm">
 			<rfilter type="gaussian"/>
+            <integer name="width" value="432" />
+            <integer name="height" value="368" />
 			<boolean name="banner" value="false"/>
 		</film>
 	</sensor>

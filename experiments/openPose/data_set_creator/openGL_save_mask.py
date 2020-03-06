@@ -28,7 +28,7 @@ INDICES = np.array([0, 1, 3,
                     1, 2, 3],
                     dtype="int32")
 
-WINDOW_WIDTH, WINDOW_HEIGHT = 768, 576
+WINDOW_WIDTH, WINDOW_HEIGHT = 432, 368
 
 # camera params
 FAR_CLIP = 2500.0

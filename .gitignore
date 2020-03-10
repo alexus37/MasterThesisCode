@@ -4,6 +4,7 @@ experiments/logs/
 .ipynb_checkpoints
 examples/data/
 examples/models/
+wandb/
 
 #
 *.mip

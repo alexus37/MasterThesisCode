@@ -8,3 +8,4 @@
 4. open obj with mts gui and create serialized version
 5. run create_data_Set.ipynb
 6. create masks by running. `for i in ../../data/generated/*.xml; do python openGL_save_image.py --filename $i; done`
+7. create masks by running. `for i in ../../data/generated/*.xml; do python openGL_save_2D_warp.py --filename $i; done`

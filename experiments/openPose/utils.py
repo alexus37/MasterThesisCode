@@ -13,6 +13,13 @@ from tf_pose import common
 import cv2
 import xml.dom.minidom
 import os 
+from PIL import Image
+import sys
+sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../..'))
+from deepexplain.tf.v1_x import DeepExplain
+from tf_pose.common import CocoPart
+
 
 def run_websocket_server(websocket_handler, port=1234):
     print(f'Starting websocket server on port {port}')
@@ -151,3 +158,28 @@ def load_batch(training_paths, start_index, batch_size, width=432, height=368):
     return np.asarray(batch), i
 
     
+    
+def open_pose_attribution(estimator, 
+                          image, 
+                          method='grad*input', 
+                          Y_shape = [None] + [1, 93, 93], 
+                          QUANTILE=0.99,
+                          heatmap=None, c_id=CocoPart.RShoulder.value,
+                          mask_of_mask=None):
+    with DeepExplain(session=estimator.persistent_sess, graph=estimator.graph) as de:
+        input_tensor = estimator.tensor_image
+        output_tensor = estimator.tensor_heatMat[:, :, :, c_id]
+        xs = [image]
+        
+        if heatmap is not None:
+            quant = np.quantile(heatmap, QUANTILE)
+            mask = heatmap > quant
+            mask = Image.fromarray(np.uint8(mask*255))
+            mask = np.array(mask.resize(Y_shape[2:], Image.ANTIALIAS))
+            if mask_of_mask is not None:
+                mask = mask * (mask_of_mask > 0)
+            ys = np.expand_dims(np.expand_dims(mask, axis=0), axis=0)
+        else:
+            ys = np.ones([1, ] + Y_shape[1:])
+        [attr] = de.explain(method, T=output_tensor, X=input_tensor, xs=xs, ys=ys, Y_shape=Y_shape)
+        return attr, ys

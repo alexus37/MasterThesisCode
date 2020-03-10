@@ -20,7 +20,9 @@
 	</shape>
 
     <shape type="rectangle" id='rect'>
-        <bsdf type="diffuse"/>
+        <bsdf type="diffuse">
+            <srgb name="reflectance" value="#000000"/>
+        </bsdf>
         <transform name="toWorld">
             <scale x="15.0" y="30.0" z="1.0"/>
             <translate x="0" y="110" z="15"/>

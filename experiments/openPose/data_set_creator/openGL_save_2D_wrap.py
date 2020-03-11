@@ -101,7 +101,6 @@ class Save2dWarp:
         # Transform to record for tf
         tf_foramt = np.array(warp.flatten()[:-1], dtype=np.float32)
         np.save(filename, tf_foramt)
-        print('Saved')
 
 
     def compute_pixel_coordinates(self):

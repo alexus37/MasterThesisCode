@@ -95,7 +95,6 @@ class GLProgram:
             )
         )
         cam_matrix = np.matmul(proj_matrix, view_matrix)
-        print(cam_matrix)
         m = np.matmul(cam_matrix, model_matrix)
 
         return np.transpose(m)
@@ -254,7 +253,6 @@ class GLProgram:
         image = Image.frombytes("RGBA", (WINDOW_WIDTH, WINDOW_HEIGHT), data)
         image = ImageOps.flip(image) # in my case image is flipped top-bottom for some reason
         image.save(file_name, 'PNG')
-        print('Saved')
 
 def get_scene_values_from_filename(file_name):
     doc = xml.dom.minidom.parse(file_name)

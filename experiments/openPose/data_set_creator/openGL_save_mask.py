@@ -10,6 +10,8 @@ import pyrr
 import argparse
 import os
 import xml.dom.minidom
+import glob
+from tqdm import tqdm
 
 VERT_DATA = np.array([1.0, 1.0, 0.0,
                         1.0, -1.0, 0.0,
@@ -254,11 +256,7 @@ class GLProgram:
         image.save(file_name, 'PNG')
         print('Saved')
 
-def main(file_name):
-    if not os.path.isfile(file_name):
-        print('File does not exist')
-        return
-
+def get_scene_values_from_filename(file_name):
     doc = xml.dom.minidom.parse(file_name)
 
     shape_node_rect = doc.getElementsByTagName('shape')[1]
@@ -271,6 +269,12 @@ def main(file_name):
     z = float(translation_node.getAttribute('z'))
 
     angle = float(rotation_node.getAttribute('angle'))
+    return x, y, z, angle
+def main(file_name):
+    if not os.path.isfile(file_name):
+        print('File does not exist')
+        return
+    [x, y, z, angle] = get_scene_values_from_filename(file_name)
     print(f'using: x={x}, y={y}, z={z}, angle={angle}')
 
     glutInit()
@@ -279,8 +283,9 @@ def main(file_name):
     glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE)
     glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT)
     glutInitWindowPosition(0, 0)
-    # titel is importanten so i3 shows it floating
-    wind = glutCreateWindow("AX_FLOATING")
+    # title is important so i3 shows it floating
+    window = glutCreateWindow("AX_FLOATING")
+    glutHideWindow()
 
 
     plain_file_name, _ = os.path.splitext(file_name)
@@ -288,9 +293,39 @@ def main(file_name):
     gl.display()
     gl.save_image_as_mask(f"{plain_file_name}_mask.png")
 
+def main_multiple(directory):
+    glutInit()
+    # Create a double-buffer RGBA window.   (Single-buffering is possible.
+    # So is creating an index-mode window.)
+    glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE)
+    glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT)
+    glutInitWindowPosition(0, 0)
+    # title is important so i3 shows it floating
+    window = glutCreateWindow("AX_FLOATING")
+    glutHideWindow()
+
+    for file_name in tqdm(glob.glob(f"{directory}/train/*.xml")):
+        [x, y, z, angle] = get_scene_values_from_filename(file_name)
+        plain_file_name, _ = os.path.splitext(file_name)
+        gl = GLProgram(x, y, z, angle)
+        gl.display()
+        gl.save_image_as_mask(f"{plain_file_name}_mask.png")
+
+    for file_name in tqdm(glob.glob(f"{directory}/test/*.xml")):
+        [x, y, z, angle] = get_scene_values_from_filename(file_name)
+        plain_file_name, _ = os.path.splitext(file_name)
+        gl = GLProgram(x, y, z, angle)
+        gl.display()
+        gl.save_image_as_mask(f"{plain_file_name}_mask.png")
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='compute mask from scenefile')
-    parser.add_argument('--filename', type=str, help='filename of the xml file', required=True)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--filename', type=str, help='filename of the xml file')
+    group.add_argument('--directory', type=str, help='directory where train and test exist with the scene xmls')
     args = parser.parse_args()
+    if args.filename is not None:
+        main(args.filename)
 
-    main(args.filename)
+    if args.directory is not None:
+        main_multiple(args.directory)

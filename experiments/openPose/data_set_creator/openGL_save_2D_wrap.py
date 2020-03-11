@@ -6,6 +6,8 @@ import cv2
 import argparse
 import os
 import xml.dom.minidom
+import glob
+from tqdm import tqdm
 
 VERTICES = np.array([[1.0, 1.0, 0.0],
                     [1.0, -1.0, 0.0],
@@ -143,11 +145,7 @@ class Save2dWarp:
         # transflow needs it in that order cv2 the other way around
         return cv2.getPerspectiveTransform(dst, src)
 
-def main(file_name):
-    if not os.path.isfile(file_name):
-        print('File does not exist')
-        return
-
+def get_scene_values_from_filename(file_name):
     doc = xml.dom.minidom.parse(file_name)
 
     shape_node_rect = doc.getElementsByTagName('shape')[1]
@@ -160,6 +158,14 @@ def main(file_name):
     z = float(translation_node.getAttribute('z'))
 
     angle = float(rotation_node.getAttribute('angle'))
+    return x, y, z, angle
+
+def main(file_name):
+    if not os.path.isfile(file_name):
+        print('File does not exist')
+        return
+
+    [x, y, z, angle] = get_scene_values_from_filename(file_name)
     print(f'using: x={x}, y={y}, z={z}, angle={angle}')
 
     plain_file_name, _ = os.path.splitext(file_name)
@@ -174,10 +180,38 @@ def main(file_name):
 
     # save to npy
     Save2dWarp.save_warp_npy(warp, f"{plain_file_name}_warp.npy")
+def main_multiple(directory):
+    for file_name in tqdm(glob.glob(f"{directory}/train/*.xml")):
+        [x, y, z, angle] = get_scene_values_from_filename(file_name)
+        plain_file_name, _ = os.path.splitext(file_name)
+        gl = Save2dWarp(x, y, z, angle)
+        # get the pixel coordinates
+        pixel_coordinates = gl.compute_pixel_coordinates()
+        # transform to warp
+        warp = Save2dWarp.compute_wrap_matrix(pixel_coordinates, NOISE_HEIGHT, NOISE_WIDTH)
+        # save to npy
+        Save2dWarp.save_warp_npy(warp, f"{plain_file_name}_warp.npy")
+
+    for file_name in tqdm(glob.glob(f"{directory}/test/*.xml")):
+        [x, y, z, angle] = get_scene_values_from_filename(file_name)
+        plain_file_name, _ = os.path.splitext(file_name)
+        gl = Save2dWarp(x, y, z, angle)
+        # get the pixel coordinates
+        pixel_coordinates = gl.compute_pixel_coordinates()
+        # transform to warp
+        warp = Save2dWarp.compute_wrap_matrix(pixel_coordinates, NOISE_HEIGHT, NOISE_WIDTH)
+        # save to npy
+        Save2dWarp.save_warp_npy(warp, f"{plain_file_name}_warp.npy")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='compute mask from scenefile')
-    parser.add_argument('--filename', type=str, help='filename of the xml file', required=True)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--filename', type=str, help='filename of the xml file')
+    group.add_argument('--directory', type=str, help='directory where train and test exist with the scene xmls')
     args = parser.parse_args()
 
-    main(args.filename)
+    if args.filename is not None:
+        main(args.filename)
+
+    if args.directory is not None:
+        main_multiple(args.directory)

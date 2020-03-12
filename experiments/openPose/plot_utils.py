@@ -95,6 +95,10 @@ def plot_pose(image, humans, heatMat=None):
         plt.imshow(tmp, cmap=plt.cm.gray, alpha=0.5)
         _ = plt.colorbar()
 
+def plot_humans_lines(humans, axis, color = 'r', linestyle='-', label='human'):
+    for human in humans:
+        plot_human_lines(human, axis, color, linestyle, label)
+        
 def plot_human_lines(lines, axis, color = 'r', linestyle='-', label='human'):
     for line in lines:
         x = [line[0][0], line[1][0]]

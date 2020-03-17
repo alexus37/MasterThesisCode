@@ -135,6 +135,16 @@ def compare_poses(pose1, pose2):
             cur_max = cur_diff
         total_diff += cur_diff
     return total_diff, most_moved_part
+    
+
+def pose_loss_single_human(newHuman, oldHuman):
+    if len(oldHuman) == 0 or len(newHuman) == 0:
+        return 0
+    detected = 0
+    for i in oldHuman[0].body_parts.keys():
+        if i in newHuman[0].body_parts:
+            detected += 1
+    return detected / len(oldHuman[0].body_parts)
 
 def compute_distance(pose1, pose2, index):
     if index not in pose1.body_parts or index not in pose2.body_parts:

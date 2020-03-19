@@ -13,12 +13,14 @@ from tf_pose import common
 import cv2
 import xml.dom.minidom
 import os 
+import glob 
+import random
 from PIL import Image
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('../..'))
 from deepexplain.tf.v1_x import DeepExplain
-from tf_pose.common import CocoPart
+from tf_pose.common import CocoPart, read_imgfile
 
 
 def run_websocket_server(websocket_handler, port=1234):
@@ -146,6 +148,18 @@ def pose_loss_single_human(newHuman, oldHuman):
             detected += 1
     return detected / len(oldHuman[0].body_parts)
 
+def pose_loss_single_human_per_part(newHuman, oldHuman):
+    if len(oldHuman) == 0 or len(newHuman) == 0:
+        return {}
+    result = {}
+    for i in oldHuman[0].body_parts.keys():
+        # the joint existed before
+        result[i] = 0
+        # the joint is successfully not detected after
+        if i in newHuman[0].body_parts:
+            result[i] = 1
+    return result
+
 def compute_distance(pose1, pose2, index):
     if index not in pose1.body_parts or index not in pose2.body_parts:
         print(f'{index} not in both poses found')
@@ -193,3 +207,28 @@ def open_pose_attribution(estimator,
             ys = np.ones([1, ] + Y_shape[1:])
         [attr] = de.explain(method, T=output_tensor, X=input_tensor, xs=xs, ys=ys, Y_shape=Y_shape)
         return attr, ys
+    
+    
+def get_image_transform_mask(directory, IMAGE_WIDTH, IMAGE_HEIGHT):
+    image_path_targets = []
+    image_targets = []
+    image_masks = []
+    image_transforms = []
+    for file in glob.glob(f"{directory}/*.xml"):
+        filename, file_extension = os.path.splitext(file)
+        
+        image_path_targets.append(filename)
+        
+        image_targets.append(read_imgfile(f'{filename}.jpg', IMAGE_WIDTH, IMAGE_HEIGHT))
+        
+        mask = read_imgfile(f'{filename}_mask.png', IMAGE_WIDTH, IMAGE_HEIGHT, cv2.IMREAD_GRAYSCALE) > 0
+        image_masks.append(np.array(np.repeat(mask[:, :, np.newaxis], 3, 2)))
+        
+        image_transforms.append(np.load(f'{filename}_warp.npy') )
+    
+    merged_list = list(zip(image_path_targets, image_targets, image_masks, image_transforms))
+    random.seed(42)
+    random.shuffle(merged_list)
+    image_path_targets, image_targets, image_masks, image_transforms = zip(*merged_list)
+    
+    return image_path_targets, image_targets, image_masks, image_transforms

@@ -18,7 +18,13 @@ class OrderedEnum(enum.Enum):
         if self.__class__ is other.__class__:
             return self.value < other.value
         return NotImplemented
+    
 class Run_types(OrderedEnum):
+    all_heat_paf_loss_bilinear = -4
+    same_distance_heat_paf_loss_bilinear = -3
+    same_roation_heat_paf_loss_bilinear = -2
+    same_distance_roation_heat_paf_loss_bilinear = -1
+    
     all_heat_paf_loss = 0
     same_distance_heat_paf_loss = 1
     same_roation_heat_paf_loss = 2
@@ -27,6 +33,11 @@ class Run_types(OrderedEnum):
     same_distance_paf_loss = 5
     same_roation_paf_loss = 6
     same_distance_roation_paf_loss = 7
+    
+    all_paf_loss_bilinear = 8
+    same_distance_paf_loss_bilinear = 9
+    same_roation_paf_loss_bilinear = 10
+    same_distance_roation_paf_loss_bilinear = 11
     
 class Run_settings():
     def __init__(self, run_type=Run_types.all_heat_paf_loss):
@@ -45,6 +56,7 @@ class Run_settings():
             snapshot_name = f'../snapshots/universal_noise_with_warp_same_distance.npy'
             train_dir = '../data/sameDistance/train'
             test_dir = '../data/sameDistance/test'
+            
             
         if self.run_type == Run_types.same_roation_heat_paf_loss:
             snapshot_name = f'../snapshots/universal_noise_with_warp_same_rotation.npy'
@@ -73,6 +85,46 @@ class Run_settings():
 
         if self.run_type == Run_types.same_distance_roation_paf_loss:
             snapshot_name = f'../snapshots/universal_noise_with_warp_same_rotation_distance_PAF.npy'
+            train_dir = '../data/sameRotationDistance/train'
+            test_dir = '../data/sameRotationDistance/test'
+        # bilinear   
+        if self.run_type == Run_types.all_heat_paf_loss_bilinear:
+            snapshot_name = f'../snapshots/universal_noise_with_warp_bilinear.npy'
+            train_dir = '../data/generated/train'
+            test_dir = '../data/generated/test'
+            
+        if self.run_type == Run_types.same_distance_heat_paf_loss_bilinear:
+            snapshot_name = f'../snapshots/universal_noise_with_warp_same_distance_bilinear.npy'
+            train_dir = '../data/sameDistance/train'
+            test_dir = '../data/sameDistance/test'
+         
+        if self.run_type == Run_types.same_roation_heat_paf_loss_bilinear:
+            snapshot_name = f'../snapshots/universal_noise_with_warp_same_rotation_bilinear.npy'
+            train_dir = '../data/sameRotation/train'
+            test_dir = '../data/sameRotation/test'
+
+        if self.run_type == Run_types.same_distance_roation_heat_paf_loss_bilinear:
+            snapshot_name = f'../snapshots/universal_noise_with_warp_same_rotation_distance_bilinear.npy'
+            train_dir = '../data/sameRotationDistance/train'
+            test_dir = '../data/sameRotationDistance/test'
+            
+        if self.run_type == Run_types.all_paf_loss_bilinear:
+            snapshot_name = f'../snapshots/universal_noise_with_warp_PAF_bilinear.npy'
+            train_dir = '../data/generated/train'
+            test_dir = '../data/generated/test'
+            
+        if self.run_type == Run_types.same_distance_paf_loss_bilinear:
+            snapshot_name = f'../snapshots/universal_noise_with_warp_same_distance_PAF_bilinear.npy'
+            train_dir = '../data/sameDistance/train'
+            test_dir = '../data/sameDistance/test'
+            
+        if self.run_type == Run_types.same_roation_paf_loss_bilinear:
+            snapshot_name = f'../snapshots/universal_noise_with_warp_same_rotation_PAF_bilinear.npy'
+            train_dir = '../data/sameRotation/train'
+            test_dir = '../data/sameRotation/test'
+
+        if self.run_type == Run_types.same_distance_roation_paf_loss_bilinear:
+            snapshot_name = f'../snapshots/universal_noise_with_warp_same_rotation_distance_PAF_bilinear.npy'
             train_dir = '../data/sameRotationDistance/train'
             test_dir = '../data/sameRotationDistance/test'
         return train_dir, test_dir, snapshot_name

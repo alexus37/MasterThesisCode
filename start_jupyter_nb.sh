@@ -118,7 +118,7 @@ ENDSSH
 # run the jupyter notebook job on Euler/Leonhard Open and save ip, port and the token
 # in the files jnbip and jninfo in the home directory of the user on Euler/Leonhard Open
 echo -e "Connecting to $CLUSTERNAME to start jupyter notebook in a batch job"
-ssh $USERNAME@$CHOSTNAME bsub -n $NUM_CORES -W $RUN_TIME -G ls_grossm  -R "rusage[mem=$MEM_PER_CORE,ngpus_excl_p=$NUM_GPUS]"  <<ENDBSUB
+ssh $USERNAME@$CHOSTNAME bsub -n $NUM_CORES -W $RUN_TIME -G ls_grossm  -R "rusage[mem=$MEM_PER_CORE,ngpus_excl_p=$NUM_GPUS]" -R 'select[gpu_model0==GeForceGTX1080Ti]' <<ENDBSUB
 module load $PCOMMAND
 export XDG_RUNTIME_DIR=
 IP_REMOTE="\$(hostname -i)"

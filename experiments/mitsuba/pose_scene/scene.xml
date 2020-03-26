@@ -1,0 +1,59 @@
+<?xml version="1.0" ?><scene version="0.6.0">
+	<integrator type="direct"/>
+
+
+
+	<shape id="main" type="serialized">
+		<transform name="to_world">
+			<rotate angle="-11.486546301783648" y="1"/>
+            <translate x="-64.92164437446417" y="0" z="0.0"/>
+		</transform>
+		<string name="filename" value="pose_0_2.serialized"/>
+		<integer name="shapeIndex" value="0"/>
+
+		<bsdf type="diffuse">
+			<texture name="reflectance" type="bitmap">
+				<string name="filename" value="MikeAlger_Texture.jpeg"/>
+			</texture>
+		</bsdf>
+	</shape>
+
+  <shape id="rect" type="obj">
+     <string name="filename" value="rectangle.obj"/>
+    <bsdf type="diffuse">
+      <rgb name="reflectance" value="0.0, 0.0, 0.0"/>
+    </bsdf>
+    <transform name="to_world">
+      <scale x="15.0" y="30.0" z="1.0"/>
+      <translate x="0" y="110" z="15"/>
+      <rotate angle="-11.486546301783648" y="1"/>
+      <translate x="-64.92164437446417" y="0" z="0.0"/>
+		</transform>
+  </shape>
+
+  <emitter type="constant">
+    <spectrum name="radiance" value="1.0"/>
+  </emitter>
+
+
+
+	<sensor type="perspective">
+		<float name="far_clip" value="2500.0"/>
+		<float name="fov" value="45"/>
+		<string name="fov_axis" value="y"/>
+		<float name="near_clip" value="2.0"/>
+		<transform name="to_world">
+			<lookat origin="-4.21425, 105.008, 327.119" target="-4.1969, 104.951, 326.12" up="0.0, 1.0, 0.0"/>
+		</transform>
+
+		<sampler type="independent">
+			<integer name="sampleCount" value="32"/>
+		</sampler>
+
+		<film type="hdrfilm">
+			<rfilter type="gaussian"/>
+      <integer name="width" value="432"/>
+      <integer name="height" value="368"/>
+		</film>
+	</sensor>
+</scene>

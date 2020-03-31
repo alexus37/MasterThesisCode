@@ -5,6 +5,7 @@ experiments/logs/
 examples/data/
 examples/models/
 wandb/
+experiments/mitsuba/output/
 
 #
 *.mip

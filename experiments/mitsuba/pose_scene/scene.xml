@@ -1,9 +1,6 @@
 <?xml version="1.0" ?><scene version="0.6.0">
 	<integrator type="direct"/>
-
-
-
-	<shape id="main" type="serialized">
+	<shape id="human" type="serialized">
 		<transform name="to_world">
 			<rotate angle="-11.486546301783648" y="1"/>
             <translate x="-64.92164437446417" y="0" z="0.0"/>
@@ -12,16 +9,24 @@
 		<integer name="shapeIndex" value="0"/>
 
 		<bsdf type="diffuse">
-			<texture name="reflectance" type="bitmap">
-				<string name="filename" value="MikeAlger_Texture.jpeg"/>
-			</texture>
+            <texture type="bitmap" name="reflectance">
+            <string name="filename" value="MikeAlger_Texture.jpeg"/>
+            <transform name="to_uv">
+              <scale x="1"/>
+            </transform>
+          </texture>
 		</bsdf>
 	</shape>
 
   <shape id="rect" type="obj">
      <string name="filename" value="rectangle.obj"/>
     <bsdf type="diffuse">
-      <rgb name="reflectance" value="0.0, 0.0, 0.0"/>
+       <texture type="bitmap" name="reflectance">
+        <string name="filename" value="noise_texture.jpg"/>
+        <transform name="to_uv">
+          <scale x="1"/>
+        </transform>
+      </texture>
     </bsdf>
     <transform name="to_world">
       <scale x="15.0" y="30.0" z="1.0"/>
@@ -51,7 +56,7 @@
 		</sampler>
 
 		<film type="hdrfilm">
-			<rfilter type="gaussian"/>
+			<rfilter type="box"/>
       <integer name="width" value="432"/>
       <integer name="height" value="368"/>
 		</film>

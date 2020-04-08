@@ -1,9 +1,13 @@
 <?xml version="1.0" ?><scene version="0.6.0">
-	<integrator type="direct"/>
+	<integrator type="direct">
+        <integer name="shading_samples" value="8"/>
+    </integrator>
+
+    
 	<shape id="human" type="serialized">
 		<transform name="to_world">
 			<rotate angle="-11.486546301783648" y="1"/>
-            <translate x="-64.92164437446417" y="0" z="0.0"/>
+            <translate x="-20.0" y="0" z="200.0"/>
 		</transform>
 		<string name="filename" value="pose_0_2.serialized"/>
 		<integer name="shapeIndex" value="0"/>
@@ -32,7 +36,7 @@
       <scale x="15.0" y="30.0" z="1.0"/>
       <translate x="0" y="110" z="15"/>
       <rotate angle="-11.486546301783648" y="1"/>
-      <translate x="-64.92164437446417" y="0" z="0.0"/>
+      <translate x="-20.0" y="0" z="200.0"/>
 		</transform>
   </shape>
 
@@ -56,9 +60,9 @@
 		</sampler>
 
 		<film type="hdrfilm">
-			<rfilter type="box"/>
-      <integer name="width" value="432"/>
-      <integer name="height" value="368"/>
+			<rfilter type="gaussian"/>
+            <integer name="width" value="432"/>
+            <integer name="height" value="368"/>
 		</film>
 	</sensor>
 </scene>

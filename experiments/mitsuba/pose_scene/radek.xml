@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?><!-- # Main Scene File -->
+<scene version="0.5.0">
+	
+   <integrator type="path"/>
+
+	
+   <sensor type="perspective">
+		
+      <float name="farClip" value="100"/>
+		
+      <float name="focusDistance" value="11.7488"/>
+		
+      <float name="fov" value="15"/>
+		
+      <string name="fovAxis" value="x"/>
+		
+      <float name="nearClip" value="0.1"/>
+		
+      <transform name="toWorld">
+
+			
+         <lookat origin="-4.233, 1.0692, -2.6602" target="0, 1, 0" up="0, 1, 0"/>
+		
+      </transform>
+
+		
+      <sampler type="ldsampler">
+			
+         <integer name="sampleCount" value="64"/>
+		
+      </sampler>
+
+		
+      <film type="ldrfilm">
+			<!-- <integer name="cropHeight" value="384"/> -->
+			
+         <integer name="cropHeight" value="640"/>
+			
+         <integer name="cropOffsetX" value="0"/>
+			
+         <integer name="cropOffsetY" value="0"/>
+			<!-- <integer name="cropWidth" value="196"/> -->
+			
+         <integer name="cropWidth" value="392"/> 
+			
+         <float name="exposure" value="0"/>
+			
+         <string name="fileFormat" value="png"/>
+			
+         <boolean name="fitHorizontal" value="true"/>
+			
+         <float name="gamma" value="-1"/>
+			<!-- <integer name="height" value="384"/> -->
+			
+         <integer name="height" value="640"/>
+			
+         <boolean name="highQualityEdges" value="false"/>
+			
+         <float name="pixelAspectX" value="1"/>
+			
+         <float name="pixelAspectY" value="1"/>
+			
+         <string name="pixelFormat" value="rgb"/>
+			
+         <float name="shiftX" value="0"/>
+			
+         <float name="shiftY" value="0"/>
+			
+         <string name="tonemapMethod" value="gamma"/>
+			<!-- <integer name="width" value="196"/> -->
+			
+         <integer name="width" value="392"/>
+
+			
+         <rfilter type="gaussian"/>
+		
+      </film>
+	
+   </sensor>
+
+	
+   <shape id="Plane_Plane_0000_m000_0.000000" type="obj">
+		
+      <bsdf type="twosided">
+			
+         <bsdf type="diffuse">
+				
+            <spectrum name="reflectance" value="0.25, 0.25, 0.25"/>
+			
+         </bsdf>
+		
+      </bsdf>
+		
+      <string name="filename" value="../../blender/ground.obj"/>
+	
+   </shape>
+
+	
+   <shape id="character" type="obj">
+		
+      <bsdf type="twosided">
+			
+         <bsdf type="diffuse">
+				
+            <spectrum name="reflectance" value="0.75, 0.75, 0.75"/>
+			
+         </bsdf>
+		
+      </bsdf>
+		
+      <string name="filename" value="/cluster/scratch/rdanecek/arcsim/SPRING_MALE_RESAMPLED/mesh88_animated/14/14_09/frame_01936.obj"/>
+		
+      <transform name="toWorld">
+			
+         <translate x="96.3163" y="-488.1123" z="-234.7115"/>
+			
+         <scale value="0.001"/>
+		
+      </transform>
+	
+   </shape>
+
+	
+   <bsdf id="__flagbsdf" type="twosided">
+		
+      <bsdf type="diffuse">
+			
+         <spectrum name="reflectance" value="0.097540, 0.278498, 0.546882"/>
+		
+      </bsdf>
+	
+   </bsdf>
+
+	
+   <shape id="simulated" type="obj">
+		
+      <ref id="__flagbsdf"/>
+		
+      <string name="filename" value="/cluster/scratch/rdanecek/arcsim/SPRING_MALE_RESAMPLED/mesh88_animated/14/14_09/simulated/tshirt_final_fine/00534_00.obj"/>
+		
+      <transform name="toWorld">
+			
+         <translate x="96.3163" y="-488.1123" z="-234.7115"/>
+			
+         <scale value="0.001"/>
+			<!-- <matrix value="1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 -0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000"/> -->
+		
+      </transform>
+	
+   </shape>
+
+	
+   <emitter type="sunsky">
+		
+      <transform name="toWorld">
+			
+         <rotate angle="313.9363" y="1"/>
+		
+      </transform>
+		
+      <float name="scale" value="2"/>
+		
+      <float name="stretch" value="1.2"/>
+		
+      <float name="turbidity" value="5"/>
+		
+      <float name="hour" value="9.2647"/>
+	
+   </emitter>
+
+</scene>

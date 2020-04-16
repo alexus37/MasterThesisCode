@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scene version="0.5.0">
+  <integrator type="direct">
+      <integer name="emitter_samples" value="1"/>
+      <integer name="bsdf_samples" value="0"/>
+  </integrator>
+  <sensor type="perspective">
+    <float name="far_clip" value="100"/>
+    <float name="fov" value="15"/>
+    <string name="fov_axis" value="x"/>
+    <float name="near_clip" value="0.1"/>
+    <transform name="toWorld">
+      <lookat origin="-3.9636, 1.2739, 10.0356" target="0, 1, 0" up="0, 1, 0"/>
+    </transform>
+    <sampler type="independent">
+      <integer name="sampleCount" value="32"/>
+    </sampler>
+    <film type="hdrfilm">
+      <integer name="width" value="432"/>
+      <integer name="height" value="368"/>
+      <rfilter type="gaussian"/>
+    </film>
+  </sensor>
+
+  <shape id="place.000000" type="obj">
+    <bsdf type="diffuse">
+      <rgb name="reflectance" value="0.25, 0.25, 0.25"/>
+    </bsdf>
+    <string name="filename" value="meshes/ground.obj"/>
+  </shape>
+  <shape id="character" type="obj">
+    <string name="filename" value="meshes/frame_05504.obj"/>
+    <bsdf type="diffuse">
+      <rgb name="reflectance" value="0.88, 0.67, 0.41"/>
+    </bsdf>
+
+    <transform name="toWorld">
+      <translate x="24.2835" y="-429.9649" z="-9.205"/>
+      <scale value="0.001"/>
+    </transform>
+  </shape>
+
+  <shape id="simulated" type="obj">
+    <string name="filename" value="meshes/01426_00.obj"/>
+    <bsdf type="diffuse">
+        <!--
+<rgb name="reflectance" value="0.67, 0.5, 0.2"/>
+      
+        -->
+      <texture type="bitmap" name="reflectance">
+        <string name="filename" value="texture/UV.jpg"/>
+      </texture>  
+    </bsdf>
+    <transform name="toWorld">
+      <translate x="24.2835" y="-429.9649" z="-9.205"/>
+      <scale value="0.001"/>
+    </transform>
+  </shape>
+
+  <emitter type="point">
+    <spectrum name="intensity" value="500.0"/>
+    <point name="position"  value="-3.9636, 1.2739, 10.0356" />
+  </emitter>
+</scene>

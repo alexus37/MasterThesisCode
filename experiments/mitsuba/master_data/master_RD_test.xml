@@ -43,9 +43,13 @@
   <shape id="simulated" type="obj">
     <string name="filename" value="meshes/01426_00.obj"/>
     <bsdf type="diffuse">
+        <!--
+<rgb name="reflectance" value="0.67, 0.5, 0.2"/>
+      
+        -->
       <texture type="bitmap" name="reflectance">
         <string name="filename" value="texture/UV.jpg"/>
-      </texture>
+      </texture>  
     </bsdf>
     <transform name="toWorld">
       <translate x="24.2835" y="-429.9649" z="-9.205"/>

@@ -5,7 +5,7 @@
     <integer name="bsdf_samples" value="8"/>
   </integrator>
   <sensor type="perspective">
-    <float name="far_clip" value="100"/>
+    <float name="far_clip" value="1000"/>
     <float name="fov" value="15"/>
     <string name="fov_axis" value="x"/>
     <float name="near_clip" value="0.1"/>
@@ -13,7 +13,6 @@
 
 
       <lookat origin="1.488,1.6201,11.733" target="0, 1, 0" up="0, 1, 0"/>
-
     </transform>
     <sampler type="independent">
       <integer name="sampleCount" value="32"/>

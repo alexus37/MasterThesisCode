@@ -210,6 +210,7 @@ def mitsuba_scene_to_torch_3d_no_ground(master_scene, data_root):
         "texOther": tex2,
         "verticies": verts, 
         "faces": faces,
+        "tshirt_faces": tshirt_faces,
         "R": R[0],
         "T": T[0]
     }
@@ -295,4 +296,36 @@ def pose_loss_single_human(newHuman, oldHuman):
             new_detected += 1
         if oldHuman[0][part] != -1:
             old_detected += 1
+    return new_detected / old_detected
+
+def pose_loss_single_human_full_fail(newHuman, oldHuman):
+    if len(oldHuman) == 0:
+        return -1
+    if len(newHuman) == 0:
+        return 0
+    else:
+        return 1
+    
+    
+def pose_loss_detection_distance(new_human, old_human, new_candidate, old_candidate, detection_radius_pixels=30):
+    if len(old_human) == 0:
+        return -1
+    if len(new_human) == 0:
+        return 0
+    new_detected = 0
+    old_detected = 0
+    for part in range(18):
+        if old_human[0][part] != -1:
+            old_detected += 1
+            if new_human[0][part] != -1:
+                # check the distance 
+                new_index = int(new_human[0][part])
+                old_index = int(old_human[0][part])
+                
+                new_location = new_candidate[new_index][:2]
+                old_location = old_candidate[old_index][:2]
+                
+                distance = np.linalg.norm(new_location - old_location)
+                if distance < detection_radius_pixels:
+                    new_detected += 1
     return new_detected / old_detected
